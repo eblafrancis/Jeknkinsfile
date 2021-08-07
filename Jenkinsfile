@@ -1,26 +1,30 @@
 pipeline {
     agent any
+    options {
+        skipStagesAfterUnstable()
+    }
     stages {
-        
-        stage("build") {
-            
+        stage('Build') {
             steps {
-                echo 'building the application...'
+                echo 'Building'
             }
         }
-        
-        stage("test") {
-            
+        stage('Test') {
             steps {
-                echo 'testing the application...'
+                echo 'Testing'
             }
         }
-        
-        stage("deploy") {
-            
+        stage('Deploy') {
             steps {
-                echo 'deploying the application...'
+                echo 'Deploying'
             }
         }
     }
 }
+
+post {
+    failure {
+        mail to: 'eblafrancis@mail.mccneb.edu',
+             subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+             body: "Something is wrong with ${env.BUILD_URL}"
+    }
